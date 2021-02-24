@@ -90,7 +90,7 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
           - /metrics-server
-          - --kubelet-preferred-address-types=InternalIP
+          - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
           - --kubelet-insecure-tls
           - --cert-dir=/tmp
           - --secure-port=4443
