@@ -1,0 +1,16 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: local-pvc-pod1
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["/bin/sh", "-c", "echo Hello Pod One &&  sleep 3600"]
+    volumeMounts:
+    - mountPath: "/data"
+      name: local-volume1
+  volumes:
+  - name: local-volume1
+    persistentVolumeClaim:
+      claimName: local-pvc1
