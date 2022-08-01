@@ -8,12 +8,12 @@ metadata:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
-- apiGroups: 
+- apiGroups:
   - metrics.k8s.io
-  resources: 
+  resources:
   - pods
   - nodes
-  verbs: 
+  verbs:
   - get
   - list
   - watch
