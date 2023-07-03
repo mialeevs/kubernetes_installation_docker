@@ -47,7 +47,7 @@ chmod +x ./installer_linux
 ./installer_linux
 source ~/.bash_profile
 
-cd cri-dockerd
+cd /home/$USER/cri-dockerd
 mkdir bin
 go build -o bin/cri-dockerd
 mkdir -p /usr/local/bin
@@ -87,7 +87,7 @@ These version should support the Docker CE version.**
 
 ```bash
 # Use the same versions to avoid issues with the installation.
-sudo apt-get install -y docker-ce kubelet=1.24.8-00 kubeadm=1.24.8-00 kubectl=1.24.8-00
+sudo apt-get install -y docker-ce kubelet=1.27.3-00 kubeadm=1.27.3-00 kubectl=1.27.3-00
 ```
 
 > To hold the versions so that the versions will not get accidently upgraded.
@@ -127,15 +127,15 @@ sudo sysctl --system
 ```bash
 # Calico network
 # Make sure to copy the join command
-sudo kubeadm init --apiserver-advertise-address=<control_plane_ip> --cri-socket /var/run/cri-dockerd.sock  --pod-network-cidr=192.168.0.0/16
+sudo kubeadm init --apiserver-advertise-address=<control_plane_ip> --cri-socket unix:///var/run/cri-dockerd.sock  --pod-network-cidr=192.168.0.0/16
 
 # Use below command if the node network is 192.168.x.x
-sudo kubeadm init --apiserver-advertise-address=<control_plane_ip> --cri-socket /var/run/cri-dockerd.sock  --pod-network-cidr=10.244.0.0/16
+sudo kubeadm init --apiserver-advertise-address=<control_plane_ip> --cri-socket unix:///var/run/cri-dockerd.sock  --pod-network-cidr=10.244.0.0/16
 
 # Copy your join command and keep it safe.
 # Below is a sample format
 # Add --cri-socket /var/run/cri-dockerd.sock to the command
-kubeadm join <control_plane_ip>:6443 --token 31rvbl.znk703hbelja7qbx --cri-socket /var/run/cri-dockerd.sock --discovery-token-ca-cert-hash sha256:3dd5f401d1c86be4axxxxxxxxxx61ce965f5xxxxxxxxxxf16cb29a89b96c97dd
+kubeadm join <control_plane_ip>:6443 --token 31rvbl.znk703hbelja7qbx --cri-socket unix:///var/run/cri-dockerd.sock --discovery-token-ca-cert-hash sha256:3dd5f401d1c86be4axxxxxxxxxx61ce965f5xxxxxxxxxxf16cb29a89b96c97dd
 ```
 
 > To start using the cluster with current user.
@@ -154,6 +154,7 @@ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0
 
 curl https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml -O
 
+# Change the ip to 10.244.0.0/16 if the node network is 192.168.x.x
 kubectl create -f custom-resources.yaml
 
 ```
