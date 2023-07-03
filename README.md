@@ -57,7 +57,9 @@ sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/syst
 systemctl daemon-reload
 systemctl enable cri-docker.service
 systemctl enable --now cri-docker.socket
+
 ```
+> Exit as root and run below commands as sudo user
 
 > Add the GPG key for kubernetes
 
