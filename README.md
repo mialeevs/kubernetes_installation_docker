@@ -47,7 +47,7 @@ chmod +x ./installer_linux
 ./installer_linux
 source ~/.bash_profile
 
-cd /home/$USER/cri-dockerd
+cd cri-dockerd
 mkdir bin
 go build -o bin/cri-dockerd
 mkdir -p /usr/local/bin
