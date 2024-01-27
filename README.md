@@ -46,7 +46,7 @@ wget https://storage.googleapis.com/golang/getgo/installer_linux
 chmod +x ./installer_linux
 ./installer_linux
 source ~/.bash_profile
-
+apt install golang-go
 cd cri-dockerd
 mkdir bin
 go build -o bin/cri-dockerd
