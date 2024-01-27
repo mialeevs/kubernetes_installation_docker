@@ -20,12 +20,14 @@ gpg --no-default-keyring --keyring ./docker.gpg --export > ./docker-archive-keyr
 sudo mv ./docker-archive-keyring.gpg /etc/apt/trusted.gpg.d/
 ```
 
-> Add the docker repository
+> Add the docker repository and install docker
 
 ```bash
 # we can get the latest release versions from https://docs.docker.com
 
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+sudo apt-get install -y docker-ce
 
 ```
 
