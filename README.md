@@ -42,11 +42,15 @@ git clone https://github.com/Mirantis/cri-dockerd.git
 > Login as root and run below commands
 
 ```bash
-wget https://storage.googleapis.com/golang/getgo/installer_linux
-chmod +x ./installer_linux
-./installer_linux
+
+wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz
+rm -rf /usr/local/go && tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
+
+
 source ~/.bash_profile
-apt install golang-go
+
+
 cd cri-dockerd
 mkdir bin
 go build -o bin/cri-dockerd
