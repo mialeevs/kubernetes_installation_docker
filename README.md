@@ -26,8 +26,9 @@ sudo mv ./docker-archive-keyring.gpg /etc/apt/trusted.gpg.d/
 # we can get the latest release versions from https://docs.docker.com
 
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
-sudo apt-get install -y docker-ce
+sudo apt update
+sudo apt install git wget curl -y
+sudo apt install -y docker-ce
 
 ```
 
@@ -35,40 +36,32 @@ sudo apt-get install -y docker-ce
 
 **Docker Engine does not implement the CRI which is a requirement for a container runtime to work with Kubernetes. For that reason, an additional service cri-dockerd has to be installed. cri-dockerd is a project based on the legacy built-in Docker Engine support that was removed from the kubelet in version 1.24.**
 
-> clone the repository
+> Get the version details
 
 ```bash
-git clone https://github.com/Mirantis/cri-dockerd.git
+VER=$(curl -s https://api.github.com/repos/Mirantis/cri-dockerd/releases/latest|grep tag_name | cut -d '"' -f 4|sed 's/v//g')
 ```
 
-> Login as root and run below commands
+> Run below commands
 
 ```bash
 
-wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz
-rm -rf /usr/local/go && tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
-echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
+wget https://github.com/Mirantis/cri-dockerd/releases/download/v${VER}/cri-dockerd-${VER}.amd64.tgz
 
-cd cri-dockerd
+tar xvf cri-dockerd-${VER}.amd64.tgz
 
-mkdir bin
+sudo mv cri-dockerd/cri-dockerd /usr/local/bin/
 
-go build -o bin/cri-dockerd
+wget https://raw.githubusercontent.com/Mirantis/cri-dockerd/master/packaging/systemd/cri-docker.service
+wget https://raw.githubusercontent.com/Mirantis/cri-dockerd/master/packaging/systemd/cri-docker.socket
+sudo mv cri-docker.socket cri-docker.service /etc/systemd/system/
+sudo sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
 
-mkdir -p /usr/local/bin
-
-install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
-
-cp -a packaging/systemd/* /etc/systemd/system
-
-sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
-
-systemctl daemon-reload
-systemctl enable cri-docker.service
-systemctl enable --now cri-docker.socket
+sudo systemctl daemon-reload
+sudo systemctl enable cri-docker.service
+sudo systemctl enable --now cri-docker.socket
 
 ```
-> Exit as root and run below commands as sudo user
 
 > Add the GPG key for kubernetes
 
@@ -78,8 +71,6 @@ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --
 ```
 
 > Add the kubernetes repository
-
-**Check for the latest release in https://packages.cloud.google.com/apt/dists**
 
 ```bash
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
@@ -92,10 +83,7 @@ echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 sudo apt-get update
 ```
 
-> Install Docker and Kubernetes packages.
-
-**Note that if you want to use a newer version of Kubernetes, change the version installed for kubelet, kubeadm, and kubectl and be sure that all three use the same version.
-These version should support the Docker CE version.**
+> Install  Kubernetes packages.
 
 ```bash
 # Use the same versions to avoid issues with the installation.
