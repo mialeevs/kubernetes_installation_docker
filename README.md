@@ -64,7 +64,8 @@ systemctl enable --now cri-docker.socket
 > Add the GPG key for kubernetes
 
 ```bash
-sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 ```
 
 > Add the kubernetes repository
@@ -72,7 +73,7 @@ sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://dl.k8s
 **Check for the latest release in https://packages.cloud.google.com/apt/dists**
 
 ```bash
-sudo echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 ```
 
 > Update the repository
@@ -89,7 +90,7 @@ These version should support the Docker CE version.**
 
 ```bash
 # Use the same versions to avoid issues with the installation.
-sudo apt-get install -y docker-ce kubelet=1.27.3-00 kubeadm=1.27.3-00 kubectl=1.27.3-00
+sudo apt-get install -y docker-ce kubelet kubeadm kubectl
 ```
 
 > To hold the versions so that the versions will not get accidently upgraded.
