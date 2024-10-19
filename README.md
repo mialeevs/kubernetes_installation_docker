@@ -182,6 +182,7 @@ kubectl get nodes
 ### On each of Data plane node
 
 > Joining the node to the cluster:
+
 > Don't forget to include **--cri-socket unix:///var/run/cri-dockerd.sock** with the join command
 
 ```bash
