@@ -27,7 +27,7 @@ sudo mv ./docker-archive-keyring.gpg /etc/apt/trusted.gpg.d/
 
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" -y
 sudo apt update -y
-sudo apt install git wget curl -y
+sudo apt install git wget curl socat -y
 sudo apt install -y docker-ce
 
 ```
