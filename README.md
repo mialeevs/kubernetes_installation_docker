@@ -124,6 +124,9 @@ sudo sysctl --system
 
 ```bash
 sudo swappff -a
+```
+
+```bash
 sudo vim /etc/fstab
 # comment the line which starts with **swap.img**.
 ```
@@ -179,6 +182,7 @@ kubectl get nodes
 ### On each of Data plane node
 
 > Joining the node to the cluster:
+> Don't forget to include **--cri-socket unix:///var/run/cri-dockerd.sock** with the join command
 
 ```bash
 sudo kubeadm join $controller_private_ip:6443 --token $token --discovery-token-ca-cert-hash $hash
