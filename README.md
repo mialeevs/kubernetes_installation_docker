@@ -183,7 +183,7 @@ kubectl get nodes
 
 > Joining the node to the cluster:
 
-> Don't forget to include **--cri-socket unix:///var/run/cri-dockerd.sock** with the join command
+> Don't forget to include *--cri-socket unix:///var/run/cri-dockerd.sock* with the join command
 
 ```bash
 sudo kubeadm join $controller_private_ip:6443 --token $token --discovery-token-ca-cert-hash $hash
