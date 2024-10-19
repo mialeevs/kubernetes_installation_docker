@@ -1,4 +1,4 @@
-﻿# Kubernetes Installation on Ubuntu 22.04
+﻿# Kubernetes Installation on Ubuntu 22.04/24.04
 
 Get the detailed information about the installation from the below-mentioned websites of **Docker** and **Kubernetes**.
 
@@ -119,8 +119,16 @@ EOF
 # Apply sysctl params without reboot
 sudo sysctl --system
 ```
+### Disable SWAP
+> Disable swap on controlplane and dataplane nodes
 
-### On the Kube master server
+```bash
+sudo swappff -a
+sudo vim /etc/fstab
+# comment the line which starts with **swap.img**.
+```
+
+### On the Control Plane server
 
 > Initialize the cluster by passing the cidr value and the value will depend on the type of network CLI you choose.
 
@@ -168,7 +176,7 @@ kubectl create -f custom-resources.yaml
 kubectl get nodes
 ```
 
-### On each of Kube node server
+### On each of Data plane node
 
 > Joining the node to the cluster:
 
